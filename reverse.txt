@@ -1,0 +1,33 @@
+[0] = version = 1; [1] = cmd ; [2] = MSB len, [3] = LSB len
+
+min sizes = {        
+[0] = 12; 
+[2] = 16; 
+[3] = 5;
+[5] = 0;
+[6] = 0;
+[7] = 0;
+[8] = 4;
+[9] = 1;
+[10] = 1;
+}
+
+cmd = 0 ====> int + int + byte + byte + byte + byte + optional { byte length + string }
+configure { width, height, maxPointers, inputMode }
+cmd = 14 ===> voice packet (whichever size you want)
+cmd = 21 ====> PING? PONG? Disqble watchdog?
+cmd = 2 ==> handle key long(ignored) + int + int
+cmd = 3 ===> pointer
+
+cmd = 18 => subcmds 1-16 IME related stuff like getSelectedText
+cmd = 19 => {byte} client became interactive
+
+cmd = 28 => Take bug report
+cmd = 29 = cancel bug report
+cmd = 11 = voice start
+cmd = 12 = voice stop
+cmd = 13 {int,int,int} = voice config
+cmd = 15 string Input 
+cmd = 16: stirng Intent
+cmd = 36, 37==> Related to Setup-Wizard
+
