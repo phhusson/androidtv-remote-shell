@@ -6,6 +6,8 @@ import (
     "encoding/binary"
     "fmt"
     "log"
+    "os"
+    "strconv"
 )
 
 func send(conn *tls.Conn, cmdId byte, buf []byte) {
@@ -91,6 +93,25 @@ func sendIntent(conn *tls.Conn, intent string) {
     send(conn, 16, []byte(intent))
 }
 
+func strToKey(key string) int {
+    if key == "up" {
+        return 19
+    } else if key == "down" {
+        return 20
+    } else if key == "right" {
+        return 22
+    } else if key == "left" {
+        return 21
+    } else if key == "home" {
+        return 3
+    } else if key == "back" {
+        return 4
+    } else if key == "center" || key == "enter" {
+        return 23
+    }
+    return -1
+}
+
 func main() {
     //TODO: verify servert cert
     customVerify := func(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error {
@@ -121,7 +142,17 @@ func main() {
 
     recv(conn)
     configure(conn, 1024, 1024, 1, 2)
+    if os.Args[1] == "key" {
+        var key int
+        key, err := strconv.Atoi(os.Args[2])
+        if err != nil {
+            key = strToKey(os.Args[2])
+        }
+        pressKey(conn, key)
+    } else if os.Args[1] == "intent" {
+        sendIntent(conn, os.Args[2])
+    }
     // Key 3 = HOME
-    pressKey(conn, 3)
+    //pressKey(conn, 3)
     //sendIntent(conn, "android-app://com.android.tv.settings/#Intent;action=android.settings.SETTINGS;end")
 }
